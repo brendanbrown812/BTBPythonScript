@@ -4,9 +4,11 @@ from datetime import datetime
 from Core import *
 
 class WriteupPage:
-    def __init__(self, email, writeupDate):
+    def __init__(self, email, date, name, weekNumber):
         self.email = email
-        self.writeupDate = writeupDate
+        self.date = date
+        self.name = name
+        self.weekNumber = weekNumber
 
 def getWriteupPages():
     load_dotenv()
@@ -17,8 +19,10 @@ def getWriteupPages():
 
     for page in pages:
         email = page['properties']['Email']['text'][0]['plain_text']
-        writeupDate = page["properties"]["WriteupDate"]["date"]["start"]
+        date = page["properties"]["Date"]["date"]["start"]
+        name = page['properties']['Name']['text'][0]['plain_text']
+        weekNumber = page['properties']['Week Number']['text'][0]['plain_text']
 
-        pagesList.append(WriteupPage(email, writeupDate))
+        pagesList.append(WriteupPage(email, date, name, weekNumber))
     
     return pagesList
