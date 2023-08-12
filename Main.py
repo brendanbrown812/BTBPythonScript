@@ -1,0 +1,3 @@
+from WriteupAlert import *
+
+RunWriteupAlert()
