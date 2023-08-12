@@ -12,6 +12,8 @@ load_dotenv()
 def getPages(database_id, num_pages = None):
     NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 
+    daddy = "joe stacy"
+
     url = f"https://api.notion.com/v1/databases/{database_id}/query"
 
     headers = {
