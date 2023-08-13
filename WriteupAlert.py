@@ -18,21 +18,22 @@ def RunWriteupAlert():
         if daysUntilWriteup == 1:
             sendItDaddy = True
             email = writeup.email
-            subject = "Writeup Alert: One Day"
-            body = "Your writeup is due in 1 day"
+            subject = "BTB PTGOTW Writeup 1 Day reminder"
+            body = f"{writeup.name}\nThis is your third reminder that your writeup of week {writeup.weekNumber} is due on {writeup.date}. You have only 1 day to send it."
         
         if daysUntilWriteup == 7:
             sendItDaddy = True
             email = writeup.email
-            subject = "Writeup Alert: One Week"
-            body = "Your writeup is due in one week"
+            subject = "BTB PTGOTW Writeup 1 week reminder"
+            body = f"{writeup.name}\nThis is your second reminder that your writeup of week {writeup.weekNumber} is due on {writeup.date}. You have a week day to send it."
 
         if daysUntilWriteup == 14:
             sendItDaddy = True
             email = writeup.email
-            subject = "Writeup Alert: Two Weeks"
-            body = "Your writeup is due in two weeks"
+            subject = "BTB PTGOTW Writeup 2 week reminder"
+            body = f"{writeup.name}\nThis is your first reminder that your writeup of week {writeup.weekNumber} is due on {writeup.date}. You have 2 weeks to send it."
 
         if sendItDaddy:
             sendEmail(email, subject, body)
-            print(f"Email sent to {writeup.email}\n\n")
+            if os.getenv("TEST_MODE").lower() == "true":
+                print(f"Email sent to {writeup.email}\n\nIt would have said:\n{body}\n\nWith a subject of:\n{subject}")
