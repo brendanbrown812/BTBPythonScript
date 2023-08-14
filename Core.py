@@ -9,7 +9,7 @@ from email.mime.text import MIMEText
 
 load_dotenv()
 
-def getPages(database_id, num_pages = None):
+def getPages(database_id, sortBy, num_pages = None):
     NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 
     url = f"https://api.notion.com/v1/databases/{database_id}/query"
@@ -27,7 +27,7 @@ def getPages(database_id, num_pages = None):
         "page_size": page_size,
         "sorts": [
             {
-                "property": "Date",
+                "property": sortBy,
                 "direction": "descending"
             }
         ]
