@@ -45,6 +45,44 @@ def getPages(database_id, num_pages = None):
         results.extend(data["results"])
 
     return results
+    return ""
+
+def getAllAlerts(database_id, num_pages = None):
+    NOTION_TOKEN = os.getenv("NOTION_TOKEN")
+
+    url = f"https://api.notion.com/v1/databases/{database_id}/query"
+
+    headers = {
+        "Authorization": "Bearer " + NOTION_TOKEN,
+        "Content-Type": "application/json",
+        "Notion-Version": "2022-06-28"
+    }
+
+    get_all = num_pages is None
+    page_size = 100 if get_all else num_pages
+
+    payload = {
+        "page_size": page_size,
+        "sorts": [
+            {
+                "property": "DateToSendAlert",
+                "direction": "descending"
+            }
+        ]
+    }
+
+    response = requests.post(url, json=payload, headers=headers)
+
+    data = response.json()
+    results = data["results"]
+
+    while data["has_more"] and get_all:
+        payload = {"page_size": page_size, "start_cursor": data["next_cursor"]}
+        response = requests.post(url, json=payload, headers=headers)
+        data = response.json()
+        results.extend(data["results"])
+
+    return results
 
 def isTestMode():
     return os.getenv("TEST_MODE").lower() == "true"

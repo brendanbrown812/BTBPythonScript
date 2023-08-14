@@ -1,3 +1,5 @@
 from WriteupAlert import *
+from GeneralAlerts import *
 
-RunWriteupAlert()
+#RunWriteupAlert()
+RunGeneralAlerts()
