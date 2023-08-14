@@ -33,7 +33,7 @@ def RunWriteupAlert():
             subject = "BTB PTGOTW Writeup 2 week reminder"
             body = f"{writeup.name}\nThis is your first reminder that your writeup of week {writeup.weekNumber} is due on {writeup.date}. You have 2 weeks to send it."
 
-        if sendItDaddy:
+        if sendItDaddy and writeup.completed.lower() != "true":
             sendEmail(email, subject, body)
             if os.getenv("TEST_MODE").lower() == "true":
                 print(f"Email sent to {writeup.email}\n\nIt would have said:\n{body}\n\nWith a subject of:\n{subject}")
