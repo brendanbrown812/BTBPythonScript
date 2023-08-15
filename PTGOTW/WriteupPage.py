@@ -13,9 +13,9 @@ class WriteupPage:
 
 def getWriteupPages():
     load_dotenv()
-    tableId = os.getenv("WRITEUP_ALERT_ID")
+    tableId = os.getenv("PTGOTW_REMINDERS_PAGE_ID")
 
-    pages = getPages(tableId)
+    pages = getPages(tableId, "Date")
     pagesList = []
 
     for page in pages:

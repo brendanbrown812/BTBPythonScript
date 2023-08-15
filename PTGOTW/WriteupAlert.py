@@ -1,5 +1,5 @@
 from Core import *
-from WriteupPage import *
+from PTGOTW.WriteupPage import *
 from datetime import datetime
 
 def RunWriteupAlert():
