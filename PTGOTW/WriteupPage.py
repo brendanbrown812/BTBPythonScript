@@ -19,11 +19,11 @@ def getWriteupPages():
     pagesList = []
 
     for page in pages:
-        email = page['properties']['Email']['rich_text'][0]['text']['content']
-        date = page["properties"]["Date"]["date"]["start"]
-        name = page['properties']['Name']['title'][0]['text']['content']
-        weekNumber = page['properties']['Week Number']['rich_text'][0]['text']['content']
-        completed = page['properties']['Completed']['rich_text'][0]['text']['content']
+        email = getNotionColumn(page, "Email", NotionColumnType.TEXT)
+        date = getNotionColumn(page, "Date", NotionColumnType.DATE)
+        name = getNotionColumn(page, "Name", NotionColumnType.TITLE)
+        weekNumber = getNotionColumn(page, "Week Number", NotionColumnType.TEXT)
+        completed = getNotionColumn(page, "Completed", NotionColumnType.TEXT)
 
         pagesList.append(WriteupPage(email, date, name, weekNumber, completed))
     

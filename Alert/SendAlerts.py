@@ -19,6 +19,5 @@ def RunGeneralAlerts():
             email_list = alert.alertRecipients.split(',')
             for email in email_list:
                 sendEmail(email, subject, body)
-                if os.getenv("TEST_MODE").lower() == "true":
-                    print(f"I would have sent an email to {email} saying {body}")
+                print(f"Sent an email to {email} saying {body}")
                 

@@ -6,10 +6,39 @@ from datetime import datetime
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from enum import Enum
 
 load_dotenv()
 
-def getPages(database_id, sortBy, num_pages = None):
+class NotionColumnType(Enum):
+    TEXT = "TEXT"
+    DATE = "DATE"
+    TITLE = "TITLE"
+    CHECKBOX = "CHECKBOX"
+    NUMBER = "NUMBER"
+    SELECT = "SELECT"
+
+def getNotionColumn(page, columnName, columnType):
+    if columnType == NotionColumnType.TEXT:
+        return page['properties'][columnName]['rich_text'][0]['text']['content']
+    
+    if columnType == NotionColumnType.DATE:
+        return page["properties"][columnName]["date"]["start"]
+    
+    if columnType == NotionColumnType.TITLE:
+        return page['properties'][columnName]['title'][0]['text']['content']
+    
+    if columnType == NotionColumnType.CHECKBOX:
+        return page["properties"][columnName]["checkbox"]
+    
+    if columnType == NotionColumnType.NUMBER:
+        return page['properties'][columnName]['number']
+    
+    if columnType == NotionColumnType.SELECT:
+        return page['properties'][columnName]['select']['name']
+    
+
+def getPages(database_id, sortBy = "Date", num_pages = None):
     NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 
     url = f"https://api.notion.com/v1/databases/{database_id}/query"
