@@ -17,6 +17,7 @@ class NotionColumnType(Enum):
     CHECKBOX = "CHECKBOX"
     NUMBER = "NUMBER"
     SELECT = "SELECT"
+    MULTISELECT = "MULTISELECT"
 
 def getNotionColumn(page, columnName, columnType):
     if columnType == NotionColumnType.TEXT:
@@ -36,6 +37,12 @@ def getNotionColumn(page, columnName, columnType):
     
     if columnType == NotionColumnType.SELECT:
         return page['properties'][columnName]['select']['name']
+    
+    if columnType == NotionColumnType.MULTISELECT:
+        email_list = page['properties'][columnName]['multi_select']
+        email_addresses = [item['name'] for item in email_list]
+        email_string = ','.join(email_addresses)
+        return email_string
     
 
 def getPages(database_id, sortBy = "Date", num_pages = None):
