@@ -8,7 +8,7 @@ class Alert:
         "NameOfAlert": NotionColumnType.TITLE,
         "DateToSendAlert": NotionColumnType.DATE,
         "AlertContent": NotionColumnType.TEXT,
-        "AlertRecipients": NotionColumnType.TEXT
+        "AlertRecipients": NotionColumnType.MULTISELECT
     }
 
     def __init__(self, **kwargs):
