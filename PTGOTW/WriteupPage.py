@@ -1,30 +1,32 @@
+from Core import *
 import os
 from dotenv import load_dotenv
-from datetime import datetime
-from Core import *
 
 class WriteupPage:
-    def __init__(self, email, date, name, weekNumber, completed):
-        self.email = email
-        self.date = date
-        self.name = name
-        self.weekNumber = weekNumber
-        self.completed = completed
+    # Define the fields and their notion column types
+    FIELDS = {
+        "Email": NotionColumnType.TEXT,
+        "Date": NotionColumnType.DATE,
+        "Name": NotionColumnType.TITLE,
+        "WeekNumber": NotionColumnType.TEXT,
+        "Completed": NotionColumnType.TEXT
+    }
+
+    def __init__(self, **kwargs):
+        for field, value in kwargs.items():
+            setattr(self, field, value)
 
 def getWriteupPages():
     load_dotenv()
     tableId = os.getenv("PTGOTW_REMINDERS_PAGE_ID")
-
     pages = getPages(tableId, "Date")
     pagesList = []
 
     for page in pages:
-        email = getNotionColumn(page, "Email", NotionColumnType.TEXT)
-        date = getNotionColumn(page, "Date", NotionColumnType.DATE)
-        name = getNotionColumn(page, "Name", NotionColumnType.TITLE)
-        weekNumber = getNotionColumn(page, "Week Number", NotionColumnType.TEXT)
-        completed = getNotionColumn(page, "Completed", NotionColumnType.TEXT)
+        # Dynamically fetch each field
+        fields_data = {field: getNotionColumn(page, field.replace('_', ' '), column_type) 
+                       for field, column_type in WriteupPage.FIELDS.items()}
 
-        pagesList.append(WriteupPage(email, date, name, weekNumber, completed))
+        pagesList.append(WriteupPage(**fields_data))
     
     return pagesList
