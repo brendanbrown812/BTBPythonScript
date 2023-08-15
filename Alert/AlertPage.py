@@ -16,10 +16,10 @@ def getAlerts():
     alertList = []
 
     for page in pages:
-        nameOfAlert = page['properties']['NameOfAlert']['title'][0]['text']['content']
-        dateToSendAlert = page["properties"]["DateToSendAlert"]["date"]["start"]
-        alertContent = page['properties']['AlertContent']['rich_text'][0]['text']['content']
-        alertRecipients = page['properties']['AlertRecipients']['rich_text'][0]['text']['content']
+        nameOfAlert = getNotionColumn(page, "NameOfAlert", NotionColumnType.TITLE)
+        dateToSendAlert = getNotionColumn(page, "DateToSendAlert", NotionColumnType.DATE)
+        alertContent = getNotionColumn(page, "AlertContent", NotionColumnType.TEXT)
+        alertRecipients = getNotionColumn(page, "AlertRecipients", NotionColumnType.TEXT)
 
         alertList.append(Alert(nameOfAlert, dateToSendAlert, alertContent, alertRecipients))
     
