@@ -1,5 +1,5 @@
 from Core import *
-from PTGOTW.WriteupPage import *
+from Pages.WriteupPage import *
 from datetime import datetime
 
 def RunWriteupAlert():
@@ -33,7 +33,7 @@ def RunWriteupAlert():
             subject = "BTB PTGOTW Writeup 2 week reminder"
             body = f"{writeup.Name}\nThis is your first reminder that your writeup of week {writeup.WeekNumber} is due on {writeup.Date}. You have 2 weeks to send it."
 
-        if sendItDaddy and writeup.Completed.lower() != "true":
+        if sendItDaddy and not writeup.Completed:
             sendEmail(email, subject, body)
             if os.getenv("TEST_MODE").lower() == "true":
-                print(f"Email sent to {writeup.Email}\n\nIt would have said:\n{body}\n\nWith a subject of:\n{subject}")
+                print(f"\nEmail sent to {writeup.Email}\nIt would have said:\n{body}\n\nWith a subject of:\n{subject}\n")

@@ -1,5 +1,5 @@
-from PTGOTW.WriteupAlert import *
-from Alert.SendAlerts import *
+from Tasks.WriteupAlertTask import *
+from Tasks.SendAlertsTask import *
 
 RunWriteupAlert()
 RunGeneralAlerts()

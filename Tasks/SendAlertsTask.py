@@ -1,5 +1,5 @@
 from Core import *
-from Alert.AlertPage import *
+from Pages.AlertPage import *
 from datetime import datetime
 
 def RunGeneralAlerts():

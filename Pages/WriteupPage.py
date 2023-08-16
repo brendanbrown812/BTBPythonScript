@@ -5,11 +5,11 @@ from dotenv import load_dotenv
 class WriteupPage:
     # Define the fields and their notion column types
     FIELDS = {
-        "Email": NotionColumnType.TEXT,
+        "Email": NotionColumnType.SELECT,
         "Date": NotionColumnType.DATE,
         "Name": NotionColumnType.TITLE,
         "WeekNumber": NotionColumnType.TEXT,
-        "Completed": NotionColumnType.TEXT
+        "Completed": NotionColumnType.CHECKBOX
     }
 
     def __init__(self, **kwargs):
