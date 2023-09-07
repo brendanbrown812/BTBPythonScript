@@ -11,7 +11,8 @@ class Game:
         "Team2Name": NotionColumnType.TEXT,
         "Team2Score": NotionColumnType.NUMBER,
         "Winner": NotionColumnType.TEXT,
-        "WasPTGOTW": NotionColumnType.CHECKBOX
+        "WasPTGOTW": NotionColumnType.CHECKBOX,
+        "id": NotionColumnType.NUMBER
     }
 
     def __init__(self, **kwargs):

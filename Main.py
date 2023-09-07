@@ -5,5 +5,5 @@ from Tasks.GetGameHistory import *
 
 RunWriteupAlert()
 RunGeneralAlerts()
-#GetHameHistory()
+#GetAllGameHistory()
 #GetSleeper()

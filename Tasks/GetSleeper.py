@@ -1,25 +1,67 @@
 from Tasks.GetSleeperUsers import *
 from Tasks.GetNflPlayers import *
 from Tasks.GetUserRosters import *
+from Tasks.GetSleeperMatchup import *
+from Tasks.GetGameHistory import *
 from Models.fantasy_team_model import FantasyTeam
 
-def GetSleeper():
+def GetSleeper(week):
     users = GetSleeperUserData()
     rosters = GetUserRosterData()
     players = GetNFLPlayersData()
+    matchup_groups = GetSleeperMatchup(week)
     
     fantasy_teams = []
+    roster_to_fantasy_team = {}  # Create a dictionary to map roster_id to FantasyTeam
     for roster in rosters:
         owner = next(user for user in users if user.user_id == roster.owner_id)
-        fantasy_teams.append(FantasyTeam(owner, roster, players))
-    
-    for team in fantasy_teams:
-        print(f"Team Name: {team.get_team_name()}")
-        print(f"Owner: {team.get_owner().display_name}")
-        print("Starters:")
-        for player in team.get_starters():
-            print(f"{player.first_name if player and player.first_name else 'N/A'} {player.last_name if player and player.last_name else 'N/A'} ({player.position if player and player.position else 'N/A'})")
-        print(f"Record: {team.get_record()}")
-        print()
+        fantasy_team = FantasyTeam(owner, roster, players)
+        fantasy_teams.append(fantasy_team)
+        roster_to_fantasy_team[roster.roster_id] = fantasy_team  # Add the mapping to the dictionary
 
-    return fantasy_teams
+    # Create a dictionary that maps the usernames to the historical names
+    historical_names = {
+        "phutt02": "Pete",
+        "sasqooch": "Martin",
+        "Conman1719": "Conman",
+        "bbrown812": "Brendan",
+        "AlexKonrardy97": "Ralph",
+        "yocool7890": "Bill",
+        "erikstacy": "Erik",
+        "BigMikeDuzIt": "Diesel",
+        "JoHyphenE": "Joey",
+        "KurtTruk": "Kurt",
+        "Tfugz": "Troy",
+        "nbeutin17": "Nate",
+    }
+    
+    returnString = ""
+    all_matchups = getGames()
+
+    # Convert the list of matchups into a dictionary for quick lookups
+    matchup_dict = {}
+    for matchup in all_matchups:
+        key = tuple(sorted([matchup.Team1Name, matchup.Team2Name]))  # This ensures that the order of team names doesn't matter
+        if key not in matchup_dict:
+            matchup_dict[key] = []
+        matchup_dict[key].append(matchup)
+
+    returnString = ""
+    for matchup_group in matchup_groups:
+        fantasy_team_1 = roster_to_fantasy_team[matchup_group[0].roster_id]
+        fantasy_team_2 = roster_to_fantasy_team[matchup_group[1].roster_id]
+
+        historical_name_1 = historical_names.get(fantasy_team_1.user.display_name, fantasy_team_1.user.display_name)
+        historical_name_2 = historical_names.get(fantasy_team_2.user.display_name, fantasy_team_2.user.display_name)
+
+        # Look up the historical matchups from the dictionary
+        historical_matchups = matchup_dict.get(tuple(sorted([historical_name_1, historical_name_2])), [])
+        historical_matchups = sorted(historical_matchups, key=lambda matchup: matchup.Year, reverse=True)
+
+        returnString += f"{historical_name_1} ({fantasy_team_1.user.team_name}) vs. {historical_name_2} ({fantasy_team_2.user.team_name})\n"
+        
+        for matchup in historical_matchups:
+            returnString += f"In {matchup.Year} week {matchup.Week}, {matchup.Winner} won {matchup.Team1Score if matchup.Team1Score > matchup.Team2Score else matchup.Team2Score} to {matchup.Team1Score if matchup.Team1Score < matchup.Team2Score else matchup.Team2Score}{' in a PTGOTW' if matchup.WasPTGOTW == True else ''}\n"
+        returnString += "\n"
+
+    return returnString
