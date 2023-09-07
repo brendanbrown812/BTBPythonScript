@@ -18,11 +18,11 @@ def RunWriteupAlert():
         if daysUntilWriteup == 1:
             historicalMatchupData = GetSleeper(writeup.WeekNumber)
             subject = f"BTB Week {writeup.WeekNumber} Historical Data"
-            body = historicalMatchupData
+            body = f"Hello,\n\nThis is the historical data for week {writeup.WeekNumber}'s matchups:\n\n"
+            body += historicalMatchupData
             for memberEmail in os.getenv("ALL_LEAGUE_EMAILS").split(','):
                 if memberEmail != writeup.Email:
                     sendEmail(memberEmail, subject, body)
-                    print(f"\nEmail sent to {memberEmail}\nIt would have said:\n{body}\n\nWith a subject of:\n{subject}\n\n\n\n")
             sendItDaddy = True
             email = writeup.Email
             subject = "BTB PTGOTW Writeup 1 Day reminder"
