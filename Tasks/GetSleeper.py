@@ -36,26 +36,14 @@ def GetSleeper(week):
     }
     
     returnString = ""
-    all_matchups = getGames()
-
-    # Convert the list of matchups into a dictionary for quick lookups
-    matchup_dict = {}
-    for matchup in all_matchups:
-        key = tuple(sorted([matchup.Team1Name, matchup.Team2Name]))  # This ensures that the order of team names doesn't matter
-        if key not in matchup_dict:
-            matchup_dict[key] = []
-        matchup_dict[key].append(matchup)
-
-    returnString = ""
     for matchup_group in matchup_groups:
         fantasy_team_1 = roster_to_fantasy_team[matchup_group[0].roster_id]
         fantasy_team_2 = roster_to_fantasy_team[matchup_group[1].roster_id]
-
+        # Look up the historical names from the dictionary and print them
         historical_name_1 = historical_names.get(fantasy_team_1.user.display_name, fantasy_team_1.user.display_name)
         historical_name_2 = historical_names.get(fantasy_team_2.user.display_name, fantasy_team_2.user.display_name)
 
-        # Look up the historical matchups from the dictionary
-        historical_matchups = matchup_dict.get(tuple(sorted([historical_name_1, historical_name_2])), [])
+        historical_matchups = GetMatchupHistory(historical_name_1, historical_name_2)
         historical_matchups = sorted(historical_matchups, key=lambda matchup: matchup.Year, reverse=True)
 
         returnString += f"{historical_name_1} ({fantasy_team_1.user.team_name}) vs. {historical_name_2} ({fantasy_team_2.user.team_name})\n"
@@ -63,5 +51,4 @@ def GetSleeper(week):
         for matchup in historical_matchups:
             returnString += f"In {matchup.Year} week {matchup.Week}, {matchup.Winner} won {matchup.Team1Score if matchup.Team1Score > matchup.Team2Score else matchup.Team2Score} to {matchup.Team1Score if matchup.Team1Score < matchup.Team2Score else matchup.Team2Score}{' in a PTGOTW' if matchup.WasPTGOTW == True else ''}\n"
         returnString += "\n"
-
     return returnString
