@@ -75,7 +75,7 @@ def getPages(database_id, sortBy = "Date", num_pages = None):
     results = data["results"]
 
     while data["has_more"] and get_all:
-        payload = {"page_size": page_size, "start_cursor": data["next_cursor"]}
+        payload = {"page_size": page_size, "sorts": [{"property": sortBy,"direction": "descending"}], "start_cursor": data["next_cursor"]}
         response = requests.post(url, json=payload, headers=headers)
         data = response.json()
         results.extend(data["results"])
