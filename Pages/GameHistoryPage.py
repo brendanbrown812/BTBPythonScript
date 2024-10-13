@@ -11,8 +11,7 @@ class Game:
         "Team2Name": NotionColumnType.TEXT,
         "Team2Score": NotionColumnType.NUMBER,
         "Winner": NotionColumnType.TEXT,
-        "WasPTGOTW": NotionColumnType.CHECKBOX,
-        "id": NotionColumnType.NUMBER
+        "WasPTGOTW": NotionColumnType.CHECKBOX
     }
 
     def __init__(self, **kwargs):
@@ -20,8 +19,7 @@ class Game:
             setattr(self, field, value)
 
 def getGames():
-    load_dotenv()
-    tableId = os.getenv("GAME_HISTORY_PAGE_ID")
+    tableId = getTableId()
     pages = getPages(tableId, "Year")
     gameList = []
 
@@ -32,3 +30,7 @@ def getGames():
         gameList.append(Game(**fields_data))
 
     return gameList
+
+def getTableId():
+    load_dotenv()
+    return os.getenv("GAME_HISTORY_PAGE_ID")

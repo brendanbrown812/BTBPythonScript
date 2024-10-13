@@ -7,6 +7,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from enum import Enum
+import json
 
 load_dotenv()
 
@@ -43,18 +44,51 @@ def getNotionColumn(page, columnName, columnType):
         email_addresses = [item['name'] for item in email_list]
         email_string = ','.join(email_addresses)
         return email_string
-    
 
-def getPages(database_id, sortBy = "Date", num_pages = None):
+def setNotionColumn(columnType, value):
+    if columnType == NotionColumnType.TEXT:
+        return {
+                "rich_text": [
+                    {
+                        "text": {
+                            "content": value
+                        }
+                    }
+                ]
+            }
+    if columnType == NotionColumnType.TITLE:
+        return {
+                "title": [
+                    {
+                        "text": {
+                            "content": value
+                        }
+                    }
+                ]
+            }
+    if columnType == NotionColumnType.NUMBER:
+        return {
+                "number": value
+            }
+    if columnType == NotionColumnType.CHECKBOX:
+        return {
+                "checkbox": value
+            }
+    
+def getHeaders():
     NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 
-    url = f"https://api.notion.com/v1/databases/{database_id}/query"
-
-    headers = {
+    return {
         "Authorization": "Bearer " + NOTION_TOKEN,
         "Content-Type": "application/json",
         "Notion-Version": "2022-06-28"
     }
+    
+
+def getPages(database_id, sortBy = "Date", num_pages = None):
+    url = f"https://api.notion.com/v1/databases/{database_id}/query"
+
+    headers = getHeaders()
 
     get_all = num_pages is None
     page_size = 100 if get_all else num_pages
@@ -81,6 +115,24 @@ def getPages(database_id, sortBy = "Date", num_pages = None):
         results.extend(data["results"])
 
     return results
+
+def insertPage(databaseId, dataJson):
+    if isTestMode():
+        return
+    
+    url = 'https://api.notion.com/v1/pages'
+    newPageData = {
+        "parent": { "database_id": databaseId },
+        "properties": dataJson
+    }
+    data = json.dumps(newPageData)
+    headers = getHeaders()
+    
+    result = requests.request('POST', url, headers=headers, data=data)
+    if result.status_code != 200:
+        print(f"ERROR writing to DB: {result.status_code}")
+        print(result.text)
+
 
 def isTestMode():
     return os.getenv("TEST_MODE").lower() == "true"
