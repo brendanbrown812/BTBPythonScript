@@ -44,6 +44,36 @@ def getNotionColumn(page, columnName, columnType):
         email_addresses = [item['name'] for item in email_list]
         email_string = ','.join(email_addresses)
         return email_string
+
+def setNotionColumn(columnType, value):
+    if columnType == NotionColumnType.TEXT:
+        return {
+                "rich_text": [
+                    {
+                        "text": {
+                            "content": value
+                        }
+                    }
+                ]
+            }
+    if columnType == NotionColumnType.TITLE:
+        return {
+                "title": [
+                    {
+                        "text": {
+                            "content": value
+                        }
+                    }
+                ]
+            }
+    if columnType == NotionColumnType.NUMBER:
+        return {
+                "number": value
+            }
+    if columnType == NotionColumnType.CHECKBOX:
+        return {
+                "checkbox": value
+            }
     
 def getHeaders():
     NOTION_TOKEN = os.getenv("NOTION_TOKEN")
