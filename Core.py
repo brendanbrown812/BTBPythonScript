@@ -22,13 +22,22 @@ class NotionColumnType(Enum):
 
 def getNotionColumn(page, columnName, columnType):
     if columnType == NotionColumnType.TEXT:
-        return page['properties'][columnName]['rich_text'][0]['text']['content']
+        rich_text = page['properties'][columnName]['rich_text']
+        if rich_text and len(rich_text) > 0:
+            return rich_text[0]['text']['content']
+        return ""  # or None, depending on your preference
     
     if columnType == NotionColumnType.DATE:
-        return page["properties"][columnName]["date"]["start"]
+        date_obj = page["properties"][columnName]["date"]
+        if date_obj:
+            return date_obj["start"]
+        return None
     
     if columnType == NotionColumnType.TITLE:
-        return page['properties'][columnName]['title'][0]['text']['content']
+        title = page['properties'][columnName]['title']
+        if title and len(title) > 0:
+            return title[0]['text']['content']
+        return ""  # or None
     
     if columnType == NotionColumnType.CHECKBOX:
         return page["properties"][columnName]["checkbox"]
@@ -37,13 +46,17 @@ def getNotionColumn(page, columnName, columnType):
         return page['properties'][columnName]['number']
     
     if columnType == NotionColumnType.SELECT:
-        return page['properties'][columnName]['select']['name']
+        select_obj = page['properties'][columnName]['select']
+        if select_obj:
+            return select_obj['name']
+        return None  # or ""
     
     if columnType == NotionColumnType.MULTISELECT:
         email_list = page['properties'][columnName]['multi_select']
-        email_addresses = [item['name'] for item in email_list]
-        email_string = ','.join(email_addresses)
-        return email_string
+        if email_list:
+            email_addresses = [item['name'] for item in email_list]
+            return ','.join(email_addresses)
+        return ""
 
 def setNotionColumn(columnType, value):
     if columnType == NotionColumnType.TEXT:
