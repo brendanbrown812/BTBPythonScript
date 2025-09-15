@@ -4,6 +4,7 @@ from Tasks.GetUserRosters import *
 from Tasks.GetSleeperMatchup import *
 from Tasks.GetGameHistory import *
 from Models.fantasy_team_model import FantasyTeam
+from Constants import *
 
 def GetSleeper(week):
     users = GetSleeperUserData()
@@ -18,30 +19,14 @@ def GetSleeper(week):
         fantasy_team = FantasyTeam(owner, roster, players)
         fantasy_teams.append(fantasy_team)
         roster_to_fantasy_team[roster.roster_id] = fantasy_team  # Add the mapping to the dictionary
-
-    # Create a dictionary that maps the usernames to the historical names
-    historical_names = {
-        "phutt02": "Pete",
-        "sasqooch": "Martin",
-        "Conman1719": "Conman",
-        "bbrown812": "Brendan",
-        "AlexKonrardy97": "Ralph",
-        "yocool7890": "Bill",
-        "erikstacy": "Erik",
-        "BigMikeDuzIt": "Diesel",
-        "JoHyphenE": "Joey",
-        "KurtTruk": "Kurt",
-        "Tfugz": "Troy",
-        "nbeutin17": "Nate",
-    }
     
     returnString = ""
     for matchup_group in matchup_groups:
         fantasy_team_1 = roster_to_fantasy_team[matchup_group[0].roster_id]
         fantasy_team_2 = roster_to_fantasy_team[matchup_group[1].roster_id]
         # Look up the historical names from the dictionary and print them
-        historical_name_1 = historical_names.get(fantasy_team_1.user.display_name, fantasy_team_1.user.display_name)
-        historical_name_2 = historical_names.get(fantasy_team_2.user.display_name, fantasy_team_2.user.display_name)
+        historical_name_1 = SLEEPER_TO_REAL_NAME.get(fantasy_team_1.user.display_name, fantasy_team_1.user.display_name)
+        historical_name_2 = SLEEPER_TO_REAL_NAME.get(fantasy_team_2.user.display_name, fantasy_team_2.user.display_name)
 
         historical_matchups = GetMatchupHistory(historical_name_1, historical_name_2)
         historical_matchups = sorted(historical_matchups, key=lambda matchup: matchup.Year, reverse=True)

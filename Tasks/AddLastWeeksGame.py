@@ -9,6 +9,7 @@ from Tasks.GetSleeperMatchup import *
 from Tasks.GetGameHistory import *
 from Models.fantasy_team_model import FantasyTeam
 from Models.notion_game_model import *
+from Constants import *
 
 #TO DO
 #1. Add logic to email insert statements to Brendan
@@ -49,9 +50,9 @@ def AddLastWeeksGame():
                     # Look up the historical names from the dictionary and print them
                     year = datetime.now().year
                     week = writeup_to_add.WeekNumber
-                    team_1_name = notion_names.get(fantasy_team_1.user.display_name, fantasy_team_1.user.display_name)
+                    team_1_name = SLEEPER_TO_REAL_NAME.get(fantasy_team_1.user.display_name, fantasy_team_1.user.display_name)
                     team_1_score = matchup_group[0].points
-                    team_2_name = notion_names.get(fantasy_team_2.user.display_name, fantasy_team_2.user.display_name)
+                    team_2_name = SLEEPER_TO_REAL_NAME.get(fantasy_team_2.user.display_name, fantasy_team_2.user.display_name)
                     team_2_score = matchup_group[1].points
                     winner = team_1_name
                     if matchup_group[0].points < matchup_group[1].points:
@@ -63,18 +64,3 @@ def AddLastWeeksGame():
                 # Handle the case where writeup_to_add is None
                 print("No writeup to add.")
 
-notion_names = {
-        "phutt02": "Pete",
-        "sasqooch": "Martin",
-        "Conman1719": "Conman",
-        "bbrown812": "Brendan",
-        "AlexKonrardy97": "Ralph",
-        "yocool7890": "Bill",
-        "erikstacy": "Erik",
-        "BigMikeDuzIt": "Diesel",
-        "JoHyphenE": "Joey",
-        "KurtTruk": "Kurt",
-        "Tfugz": "Troy",
-        "nbeutin17": "Nate",
-    }
-    
